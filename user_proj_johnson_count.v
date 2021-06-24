@@ -133,8 +133,8 @@ module counter #(
 )(
     input clk,
     input reset,
-    output [0:size]out;
-    reg [0:size]out;
+    output [0:7] count;
+    reg [0:7] count;
 );
     
 
@@ -142,14 +142,15 @@ module counter #(
 
     // size'signed radix value
 
-     always @(posedge clk) begin
+     always @(posedge clk)
          begin
              if(reset)
-                output= 8'b0000_0000;
-            else
-                output={~out[size],out[0:size-1]};
+                count <= 8'b0000_0000;
+            else begin
+                count M= {~count[7],count[0:7-1]};
+                rdata <= count;
+            end
          end
-        
 
-end
-edefault_nettype wire
+endmodule
+`default_nettype wire
