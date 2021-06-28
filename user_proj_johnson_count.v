@@ -22,7 +22,7 @@
  *-------------------------------------------------------------
  */
 
-module user_proj_johnson_count #(
+module user_proj_example #(
     parameter BITS = 32 // 32-bit 
 )(
 `ifdef USE_POWER_PINS // Supplied by efabless
@@ -133,21 +133,27 @@ module counter #(
 )(
     input clk,
     input reset,
-    output [0:7] count;
-    reg [0:7] count;
+    input valid,
+    input [3:0] wstrb,
+    input [BITS-1:0] wdata,
+    input [BITS-1:0] la_write,
+    input [BITS-1:0] la_input,
+    output ready,
+    output [BITS-1:0] rdata,
+    output [BITS-1:0] count
 );
-    
+    reg ready;
+    reg [BITS-1:0] count;
+    reg [BITS-1:0] rdata;
 
     // Johnson counter
-
-    // size'signed radix value
 
      always @(posedge clk)
          begin
              if(reset)
-                count <= 8'b0000_0000;
+                count <= {BITS{1'b0}};
             else begin
-                count M= {~count[7],count[0:7-1]};
+                count <= {~count[BITS-1],count[0:BITS-1-1]};
                 rdata <= count;
             end
          end
